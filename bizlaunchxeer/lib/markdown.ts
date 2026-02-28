@@ -1,4 +1,4 @@
-import { marked } from "marked";
+import { marked, type Tokens } from "marked";
 import GithubSlugger from "github-slugger";
 
 export type TocItem = { depth: number; text: string; id: string };
@@ -23,18 +23,22 @@ export function buildToc(markdown: string): TocItem[] {
 export function renderMarkdown(markdown: string) {
   const slugger = new GithubSlugger();
 
+  // marked@14 uses token-based renderer signatures (e.g. heading(token)).
+  // We generate stable heading IDs for in-page anchors + ToC links.
+  const renderer = new marked.Renderer();
+  renderer.heading = (token: Tokens.Heading) => {
+    const level = token.depth;
+    const clean = String(token.text).replace(/<[^>]*>/g, "");
+    const id = slugger.slug(clean);
+    return `<h${level} id="${id}">${token.text}</h${level}>`;
+  };
+
   marked.use({
     gfm: true,
     breaks: false,
     headerIds: true,
     headerPrefix: "",
-    renderer: {
-      heading(text, level) {
-        const clean = String(text).replace(/<[^>]*>/g, "");
-        const id = slugger.slug(clean);
-        return `<h${level} id="${id}">${text}</h${level}>`;
-      }
-    }
+    renderer,
   });
 
   return marked.parse(markdown);
