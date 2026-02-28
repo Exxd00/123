@@ -37,9 +37,7 @@ export function renderMarkdown(markdown: string) {
   marked.use({
     gfm: true,
     breaks: false,
-    headerIds: true,
-    headerPrefix: "",
-    renderer
+    renderer,
   });
 
   return marked.parse(markdown);
