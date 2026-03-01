@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { LocaleLink } from "@/components/LocaleLink";
+import { MotionFadeIn, MotionStagger } from "@/components/Motion";
 import { Section } from "@/components/Section";
 import { offers, offerByKey } from "@/lib/offers";
 import { OfferCard } from "@/components/OfferCard";
@@ -17,37 +18,51 @@ export default function HomePage() {
       <section className="relative overflow-hidden border-b border-white/10 bg-black">
         <div className="absolute inset-0 bg-lux-grid opacity-60" aria-hidden />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.18),transparent_55%)]" aria-hidden />
+        <div className="pointer-events-none absolute -left-24 -top-24 h-80 w-80 rounded-full bg-[rgba(212,175,55,0.10)] blur-3xl" aria-hidden />
+        <div className="pointer-events-none absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-[rgba(255,255,255,0.06)] blur-3xl" aria-hidden />
 
         <div className="relative mx-auto max-w-6xl px-4 py-16 md:py-20">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold tracking-[0.2em] text-gold-200">
-              PREMIUM BUSINESS AUTHORITY
-            </p>
-            <h1 className="mt-3 font-serif text-4xl tracking-tight text-white md:text-6xl">
-              Launch with clarity. Build with proof. Scale with systems.
-            </h1>
-            <p className="mt-5 text-base text-white/70 md:text-lg">
-              We publish execution-first playbooks and curated recommendations for founders—no hype, no fake income claims.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg">
-                <Link href="/free-guide">Get the Free 30‑Day Launch Plan</Link>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link href="/compare">See the Recommended Path</Link>
-              </Button>
-            </div>
-            <div className="mt-6 flex flex-wrap gap-4 text-xs text-white/60">
-              <span className="inline-flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-gold-600" /> Mobile-first
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-gold-600" /> Value-first SEO
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-gold-600" /> Curated tools
-              </span>
-            </div>
+            <MotionStagger>
+              <MotionFadeIn>
+                <p className="text-xs font-semibold tracking-[0.2em] text-gold-200">
+                  PREMIUM BUSINESS AUTHORITY
+                </p>
+              </MotionFadeIn>
+              <MotionFadeIn>
+                <h1 className="mt-3 font-serif text-4xl tracking-tight text-white md:text-6xl">
+                  Launch with clarity. Build with proof. Scale with systems.
+                </h1>
+              </MotionFadeIn>
+              <MotionFadeIn>
+                <p className="mt-5 text-base text-white/70 md:text-lg">
+                  We publish execution-first playbooks and curated recommendations for founders—no hype, no fake income claims.
+                </p>
+              </MotionFadeIn>
+              <MotionFadeIn>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <Button asChild size="lg">
+                    <LocaleLink href="/free-guide">Get the Free 30‑Day Launch Plan</LocaleLink>
+                  </Button>
+                  <Button asChild size="lg" variant="outline">
+                    <LocaleLink href="/compare">See the Recommended Path</LocaleLink>
+                  </Button>
+                </div>
+              </MotionFadeIn>
+              <MotionFadeIn>
+                <div className="mt-6 flex flex-wrap gap-4 text-xs text-white/60">
+                  <span className="inline-flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-gold-600" /> Mobile-first
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-gold-600" /> Value-first SEO
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-gold-600" /> Curated tools
+                  </span>
+                </div>
+              </MotionFadeIn>
+            </MotionStagger>
           </div>
         </div>
       </section>
@@ -80,7 +95,7 @@ export default function HomePage() {
               </ol>
               <div className="mt-6">
                 <Button asChild variant="outline">
-                  <Link href="/reviews">Browse Reviews</Link>
+                  <LocaleLink href="/reviews">Browse Reviews</LocaleLink>
                 </Button>
               </div>
             </CardContent>
@@ -138,9 +153,9 @@ export default function HomePage() {
               <CardContent>
                 <div className="flex items-center justify-between text-xs text-white/60">
                   <span>{p.readingTime}</span>
-                  <Link className="text-gold-200 hover:text-gold-100" href={`/blog/${p.slug}`}>
+                  <LocaleLink className="text-gold-200 hover:text-gold-100" href={`/blog/${p.slug}`}>
                     Read →
-                  </Link>
+                  </LocaleLink>
                 </div>
               </CardContent>
             </Card>
@@ -189,10 +204,10 @@ export default function HomePage() {
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
               <Button asChild size="lg">
-                <Link href="/free-guide">Get the Free Guide</Link>
+                <LocaleLink href="/free-guide">Get the Free Guide</LocaleLink>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link href="/compare">Compare Offers</Link>
+                <LocaleLink href="/compare">Compare Offers</LocaleLink>
               </Button>
             </div>
           </div>

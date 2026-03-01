@@ -1,34 +1,37 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPost, posts } from "@/lib/content";
 import { buildToc, renderMarkdown } from "@/lib/markdown";
 import { CtaBlock } from "@/components/CtaBlock";
 import { SeoJsonLd } from "@/components/SeoJsonLd";
+import { LOCALES, type Locale, isLocale } from "@/lib/i18n";
+import { LocaleLink, localePath } from "@/components/LocaleLink";
 
 export function generateStaticParams() {
-  return posts.map((p) => ({ slug: p.slug }));
+  return LOCALES.flatMap((locale) => posts.map((p) => ({ locale, slug: p.slug })));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+export function generateMetadata({ params }: { params: { locale: string; slug: string } }): Metadata {
   const post = getPost(params.slug);
   if (!post) return {};
+  const locale: Locale = isLocale(params.locale) ? params.locale : "en";
   return {
     title: post.title,
     description: post.description,
-    alternates: { canonical: `/blog/${post.slug}` },
+    alternates: { canonical: localePath(locale, `/blog/${post.slug}`) },
     openGraph: {
       type: "article",
       title: post.title,
       description: post.description,
-      url: `/blog/${post.slug}`
+      url: localePath(locale, `/blog/${post.slug}`)
     }
   };
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
+export default function BlogPostPage({ params }: { params: { locale: string; slug: string } }) {
   const post = getPost(params.slug);
   if (!post) return notFound();
+  const locale: Locale = isLocale(params.locale) ? params.locale : "en";
 
   const toc = buildToc(post.content);
   const html = renderMarkdown(post.content);
@@ -40,7 +43,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     description: post.description,
     datePublished: post.date,
     author: { "@type": "Organization", name: "BizLaunch Xeer" },
-    mainEntityOfPage: { "@type": "WebPage", "@id": `/blog/${post.slug}` }
+    mainEntityOfPage: { "@type": "WebPage", "@id": localePath(locale, `/blog/${post.slug}`) }
   };
 
   const faqs = post.faqs;
@@ -84,15 +87,15 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
           <CtaBlock
             title="Want the exact funnel we use?"
             description="Lead magnet → 6-email sequence → ethical product ladder."
-            primaryHref="/compare"
+            primaryHref={localePath(locale, "/compare")}
             primaryText="See the Funnel"
-            secondaryHref="/reviews"
+            secondaryHref={localePath(locale, "/reviews")}
             secondaryText="Browse Reviews"
           />
 
           <div className="mt-10 border-t border-white/10 pt-6 text-sm text-white/70">
             <p>
-              Continue: <Link className="text-gold-200 hover:text-gold-100" href="/reviews">Best tools & programs</Link>
+              Continue: <LocaleLink className="text-gold-200 hover:text-gold-100" href="/reviews">Best tools & programs</LocaleLink>
             </p>
           </div>
         </div>

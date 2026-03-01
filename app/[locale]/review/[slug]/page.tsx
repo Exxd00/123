@@ -9,30 +9,34 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AffiliateButton } from "@/components/AffiliateLink";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { SeoJsonLd } from "@/components/SeoJsonLd";
+import { LOCALES, type Locale, isLocale } from "@/lib/i18n";
+import { localePath } from "@/components/LocaleLink";
 
 export function generateStaticParams() {
-  return reviews.map((r) => ({ slug: r.slug }));
+  return LOCALES.flatMap((locale) => reviews.map((r) => ({ locale, slug: r.slug })));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+export function generateMetadata({ params }: { params: { locale: string; slug: string } }): Metadata {
   const review = getReview(params.slug);
   if (!review) return {};
+  const locale: Locale = isLocale(params.locale) ? params.locale : "en";
   return {
     title: review.title,
     description: review.description,
-    alternates: { canonical: `/review/${review.slug}` },
+    alternates: { canonical: localePath(locale, `/review/${review.slug}`) },
     openGraph: {
       type: "article",
       title: review.title,
       description: review.description,
-      url: `/review/${review.slug}`
+      url: localePath(locale, `/review/${review.slug}`)
     }
   };
 }
 
-export default function ReviewPage({ params }: { params: { slug: string } }) {
+export default function ReviewPage({ params }: { params: { locale: string; slug: string } }) {
   const review = getReview(params.slug);
   if (!review) return notFound();
+  const locale: Locale = isLocale(params.locale) ? params.locale : "en";
 
   const offer = offerByKey[review.productKey];
   const html = renderMarkdown(review.content);
@@ -92,7 +96,7 @@ export default function ReviewPage({ params }: { params: { slug: string } }) {
             </div>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
               <AffiliateButton href={offer.goPath} label="Visit Offer" productKey={offer.key} />
-              <AffiliateButton href="/free-guide" label="Get the Free Guide" productKey={offer.key} variant="outline" />
+              <AffiliateButton href={localePath(locale, "/free-guide")} label="Get the Free Guide" productKey={offer.key} variant="outline" />
             </div>
           </div>
 

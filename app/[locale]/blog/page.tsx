@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { LocaleLink } from "@/components/LocaleLink";
 import { posts } from "@/lib/content";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -29,9 +29,9 @@ export default function BlogIndex() {
             <CardContent>
               <div className="flex items-center justify-between text-xs text-white/60">
                 <span>{p.readingTime}</span>
-                <Link className="text-gold-200 hover:text-gold-100" href={`/blog/${p.slug}`}>
+                <LocaleLink className="text-gold-200 hover:text-gold-100" href={`/blog/${p.slug}`}>
                   Read →
-                </Link>
+                </LocaleLink>
               </div>
             </CardContent>
           </Card>

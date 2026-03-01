@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LocaleLink } from "@/components/LocaleLink";
 import { Button } from "@/components/ui/button";
 import { offerByKey } from "@/lib/offers";
 import { ThankYouTracker } from "@/components/ThankYouTracker";
@@ -31,7 +32,7 @@ export default function ThankYouPage() {
               <Link href={entry.goPath}>See Best Value Course</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/blog">Read the Blog</Link>
+              <LocaleLink href="/blog">Read the Blog</LocaleLink>
             </Button>
           </div>
         </div>

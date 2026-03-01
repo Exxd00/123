@@ -1,5 +1,6 @@
 import { marked, type Tokens } from "marked";
 import GithubSlugger from "github-slugger";
+import sanitizeHtml from "sanitize-html";
 
 export type TocItem = {
   depth: number;
@@ -54,9 +55,31 @@ export function renderMarkdown(markdown: string): string {
     return `<h${level} id="${id}">${token.text}</h${level}>`;
   };
 
-  return marked.parse(markdown, {
+  const html = marked.parse(markdown, {
     gfm: true,
     breaks: false,
     renderer,
   }) as string;
+
+  // Safety: sanitize rendered HTML (prevents XSS if content ever becomes external).
+  return sanitizeHtml(html, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat([
+      "img",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+    ]),
+    allowedAttributes: {
+      a: ["href", "name", "target", "rel"],
+      img: ["src", "alt", "title", "width", "height", "loading"],
+      "*": ["id", "class"],
+    },
+    allowedSchemes: ["http", "https", "mailto"],
+    transformTags: {
+      a: sanitizeHtml.simpleTransform("a", { rel: "nofollow noopener", target: "_blank" }),
+    },
+  });
 }

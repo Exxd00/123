@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
 import { posts, reviews } from "@/lib/content";
+import { LOCALES } from "@/lib/i18n";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bizlaunchxeer.com";
 
   const staticRoutes = [
-    "/",
+    "",
     "/blog",
     "/reviews",
     "/compare",
@@ -14,26 +15,32 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/about",
     "/privacy-policy",
     "/terms",
-    "/disclaimer"
+    "/disclaimer",
   ];
 
-  const routes: MetadataRoute.Sitemap = staticRoutes.map((p) => ({
-    url: `${siteUrl}${p}`,
-    lastModified: new Date()
-  }));
+  const routes: MetadataRoute.Sitemap = [];
 
-  for (const p of posts) {
-    routes.push({
-      url: `${siteUrl}/blog/${p.slug}`,
-      lastModified: p.date
-    });
-  }
+  for (const locale of LOCALES) {
+    for (const p of staticRoutes) {
+      routes.push({
+        url: `${siteUrl}/${locale}${p}`,
+        lastModified: new Date(),
+      });
+    }
 
-  for (const r of reviews) {
-    routes.push({
-      url: `${siteUrl}/review/${r.slug}`,
-      lastModified: r.date
-    });
+    for (const p of posts) {
+      routes.push({
+        url: `${siteUrl}/${locale}/blog/${p.slug}`,
+        lastModified: p.date,
+      });
+    }
+
+    for (const r of reviews) {
+      routes.push({
+        url: `${siteUrl}/${locale}/review/${r.slug}`,
+        lastModified: r.date,
+      });
+    }
   }
 
   return routes;

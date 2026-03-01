@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { LocaleLink } from "@/components/LocaleLink";
 import { reviews } from "@/lib/content";
 import { offers, offerByKey } from "@/lib/offers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,9 +35,9 @@ export default function ReviewsIndex() {
               <CardContent>
                 <div className="flex items-center justify-between text-xs text-white/60">
                   <span>Rating: {r.rating.toFixed(1)} / 5</span>
-                  <Link className="text-gold-200 hover:text-gold-100" href={`/review/${r.slug}`}>
+                  <LocaleLink className="text-gold-200 hover:text-gold-100" href={`/review/${r.slug}`}>
                     Read →
-                  </Link>
+                  </LocaleLink>
                 </div>
               </CardContent>
             </Card>
@@ -54,7 +54,7 @@ export default function ReviewsIndex() {
           {offers
             .filter((o) => o.key === "entry" || o.key === "highTicket")
             .map((o) => (
-              <Link
+              <LocaleLink
                 key={o.key}
                 href={`/review/${o.key === "entry" ? "business-launch-starter-course" : "advanced-business-accelerator-program"}`}
                 className="rounded-2xl border border-white/10 bg-black/40 p-4 hover:border-[rgba(212,175,55,0.35)]"
@@ -64,7 +64,7 @@ export default function ReviewsIndex() {
                   <Badge>{o.badge}</Badge>
                 </div>
                 <p className="mt-2 text-sm text-white/70">{o.description}</p>
-              </Link>
+              </LocaleLink>
             ))}
         </div>
       </div>

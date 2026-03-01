@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import { cookies } from "next/headers";
 import "./globals.css";
 import { site } from "@/lib/site";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
-import { Analytics } from "@/components/Analytics";
-import { CookieBanner } from "@/components/CookieBanner";
+import { getDir, isLocale, type Locale } from "@/lib/i18n";
 import { ClientEnhancements } from "@/components/ClientEnhancements";
 
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
@@ -37,14 +35,14 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieLocale = cookies().get("NEXT_LOCALE")?.value;
+  const locale: Locale = isLocale(cookieLocale) ? cookieLocale : "en";
+  const dir = getDir(locale);
+
   return (
-    <html lang="en" className="dark">
+    <html lang={locale} dir={dir} className="dark">
       <body className={`${fontSans.variable} ${fontSerif.variable} font-sans`}>
-        <Analytics />
-        <Navbar />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
-        <CookieBanner />
+        {children}
         <ClientEnhancements />
       </body>
     </html>

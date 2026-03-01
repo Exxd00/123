@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LocaleLink } from "@/components/LocaleLink";
 import { offers, offerByKey } from "@/lib/offers";
 import { ComparisonTable } from "@/components/ComparisonTable";
 import { Section } from "@/components/Section";
@@ -21,8 +22,8 @@ export default function ComparePage() {
             Our recommended funnel: <span className="text-white">Entry offer</span> → <span className="text-white">Email capture</span> → <span className="text-white">6-email sequence</span> → <span className="text-white">High ticket</span>. Built for ethical value and consistent conversions.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <Button asChild><Link href="/free-guide">Get the Free Guide</Link></Button>
-            <Button asChild variant="outline"><Link href="/reviews">Read Reviews</Link></Button>
+            <Button asChild><LocaleLink href="/free-guide">Get the Free Guide</LocaleLink></Button>
+            <Button asChild variant="outline"><LocaleLink href="/reviews">Read Reviews</LocaleLink></Button>
           </div>
         </div>
       </section>
