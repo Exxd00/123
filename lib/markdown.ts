@@ -19,16 +19,19 @@ export function buildToc(markdown: string): TocItem[] {
     if (!match) continue;
 
     const depth = match[1].length;
-    const rawText = match[2];
+    const raw = match[2];
 
-    const cleanText = rawText
+    const clean = raw
       .replace(/\[(.*?)\]\(.*?\)/g, "$1")
       .replace(/`/g, "")
       .replace(/<[^>]*>/g, "")
       .trim();
 
-    const id = slugger.slug(cleanText);
-    toc.push({ depth, text: cleanText, id });
+    toc.push({
+      depth,
+      text: clean,
+      id: slugger.slug(clean),
+    });
   }
 
   return toc;
@@ -36,34 +39,24 @@ export function buildToc(markdown: string): TocItem[] {
 
 /**
  * Render Markdown to HTML
- * marked@14 compatible (token-based renderer)
- *
- * IMPORTANT:
- * We intentionally keep headerIds/headerPrefix but cast to any
- * so TypeScript won't fail even if marked typings don't include them.
+ * Compatible with marked v14+
  */
 export function renderMarkdown(markdown: string): string {
   const slugger = new GithubSlugger();
+
   const renderer = new marked.Renderer();
 
-  // ✅ marked@14: heading receives a token object (not text, level)
   renderer.heading = (token: Tokens.Heading) => {
     const level = token.depth;
     const clean = String(token.text).replace(/<[^>]*>/g, "").trim();
     const id = slugger.slug(clean);
+
     return `<h${level} id="${id}">${token.text}</h${level}>`;
   };
 
-  // ✅ Keep these options but force TS to accept them
-  marked.use(
-    ({
-      gfm: true,
-      breaks: false,
-      headerIds: true,     // will not break TypeScript due to "as any"
-      headerPrefix: "",    // will not break TypeScript due to "as any"
-      renderer,
-    } as unknown) as any
-  );
-
-  return String(marked.parse(markdown));
+  return marked.parse(markdown, {
+    gfm: true,
+    breaks: false,
+    renderer,
+  }) as string;
 }
